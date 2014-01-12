@@ -46,6 +46,7 @@ ArgParser argparser;
 #   include <iomanip>
 #   include <libgen.h>
 #   include <direct.h>
+#   include <glib.h>
 #endif
 
 void deprecated_font_suffix(const char * dummy = nullptr)
@@ -375,6 +376,9 @@ int main(int argc, char **argv)
         char temppath[MAX_PATH];
         ::GetTempPath(MAX_PATH, temppath);
         param.tmp_dir = temppath;
+
+        std::string fontConfig = param.data_dir + "/fonts.conf";
+        g_setenv("FONTCONFIG_FILE", fontConfig.c_str(), 1);
     }
 #endif
 
