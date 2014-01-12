@@ -34,6 +34,16 @@ Please respect the following restrictions:
 * Keep the discussion on topic and respect the opinions of others. 
 * Posts violating the above restrictions may be removed without any notification.
 
+
+Issues may be closed due to the following reasons:
+* Fixed
+* Duplicate of other issues
+* Invalid / Won't fix / Off topic
+* Inactiviy (for unconfirmed issues)
+* Insufficient info (for unconfirmed issues)
+
+In the last two cases, you can reopen the issue when you can provide more information.
+
 ### The Mailing List
 
 The [Mailing list](pdf2htmlex@googlegroups.com) is set up for discussion and announcements.
@@ -46,9 +56,8 @@ pdf2htmlEX is mostly written and maintained by 王璐 (Lu Wang).
 His email and twitter account can be found in 
 [README.md](https://github.com/coolwanglu/pdf2htmlEX/blob/master/README.md). 
 
-Please post only messages that do not fit into the above channels, for example:
-- Private messages to the author.
-- Sample files with private information. (But please still report the bug via the issue tracker)
+Please post only messages that do not fit into the above channels, otherwise
+note that he no longer replies with _Please post your question to the mailing list_ or _Please file an issue at GitHub_, consider your message already replied.
 
 Please expect a _long_ delay，since the messages are usually archived and checked on a regular basis.
 
@@ -68,11 +77,15 @@ First of all, did you realize that your question might have been already answere
 - The manpage (run `man pdf2htmlEX`)
 - Old posts in the [mailing list](#the-mailing-list) or the [issue tracker](#the-issue-tracker)
 - [Google](http://www.google.com/)
+- [Stack Overflow](http://stackoverflow.com/)
  
 If you cannot find anything useful there, do not hesitate to post in the [mailing list](#the-mailing-list).
 On the other hand, if you think it's something wrong about pdf2htmlEX, please [report a bug](#bug-reports) instead.
 
+It will help a lot if you provide detailed information as mentioned in the [Bug Reports](#bug-reports) section.
+
 ### Bug Reports
+
 A bug is a demonstrable problem that is caused by the code in the repository.
 A perfect bug report may help the developer to identify the cause and locate the problematic code quickly.
 Bugs should always be reported to [the Issue Tracker](#the-issue-tracker).
@@ -96,12 +109,13 @@ If you are not sure, please try to answer the following questions:
 - What steps will reproduce the issue? &mdash; please try to remove unnecessary steps
 - What's the result and what did you expect? &mdash; e.g. you can post screenshots
 - What error messages did you see?
-- Where's the affected PDF file? &mdash; e.g. you may upload the file via Dropbox and post a link here
+- Where's the affected PDF file and which pages are causing the issue? &mdash; e.g. you may upload the file via Dropbox and post a link here
 
 Especially for issues regarding building pdf2htmlEX:
 - Which compiler are you using?
 - What's the output of `cmake` and `make`?
 - What's the content of `CMakeList.txt`?
+
 
 ### Feature requests
 

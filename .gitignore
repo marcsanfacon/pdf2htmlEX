@@ -17,5 +17,8 @@ test/*
 Testing/*
 wiki/*
 doc/*
+/"\\"
+/share/base.min.css
+/share/fancy.min.css
 Bundle/*
 build/*

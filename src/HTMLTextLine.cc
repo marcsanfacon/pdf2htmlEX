@@ -31,11 +31,13 @@ HTMLTextLine::HTMLTextLine (const HTMLLineState & line_state, const Param & para
     ,line_state(line_state)
     ,clip_x1(0)
     ,clip_y1(0)
+    ,width(0)
 { }
 
-void HTMLTextLine::append_unicodes(const Unicode * u, int l)
+void HTMLTextLine::append_unicodes(const Unicode * u, int l, double width)
 {
     text.insert(text.end(), u, u+l);
+    this->width += width;
 }
 
 void HTMLTextLine::append_offset(double width)
@@ -49,6 +51,7 @@ void HTMLTextLine::append_offset(double width)
         offsets.back().width += width;
     else
         offsets.emplace_back(text.size(), width);
+    this->width += width;
 }
 
 void HTMLTextLine::append_state(const HTMLTextState & text_state)
@@ -244,9 +247,6 @@ void HTMLTextLine::clip(const HTMLClipState & clip_state)
 
 void HTMLTextLine::prepare(void)
 {
-    if(param.optimize_text)
-        optimize();
-
     // max_ascent determines the height of the div
     double accum_vertical_align = 0; // accumulated
     ascent = 0;
@@ -274,11 +274,22 @@ void HTMLTextLine::prepare(void)
 }
 
 
+void HTMLTextLine::optimize(std::vector<HTMLTextLine*> & lines)
+{
+    if(param.optimize_text == 3)
+    {
+        optimize_aggressive(lines);
+    }
+    else
+    {
+        optimize_normal(lines);
+    }
+}
 /*
  * Adjust letter space and word space in order to reduce the number of HTML elements
  * May also unmask word space
  */
-void HTMLTextLine::optimize()
+void HTMLTextLine::optimize_normal(std::vector<HTMLTextLine*> & lines)
 {
     // remove unuseful states in the end
     while((!states.empty()) && (states.back().start_idx >= text.size()))
@@ -454,6 +465,30 @@ void HTMLTextLine::optimize()
     
     // apply optimization
     std::swap(offsets, new_offsets);
+
+    lines.push_back(this);
+}
+
+// for optimize-text == 3
+void HTMLTextLine::optimize_aggressive(std::vector<HTMLTextLine*> & lines)
+{
+    HTMLLineState original_line_state = line_state;
+    // break the line if there are a large (positive or negative) shift
+    // letter space / word space are not taken into consideration (yet)
+    while(true) 
+    {
+
+        
+
+    }
+
+    /*
+    // aggressive optimization
+    if(target > state_iter1->em_size() * (param.space_threshold) - EPS)
+        out << ' ';
+    dx = 0;
+    lines.push_back(this);
+    */
 }
 
 // this state will be converted to a child node of the node of prev_state
