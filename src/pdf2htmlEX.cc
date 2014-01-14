@@ -35,19 +35,13 @@
 
 #include "util/path.h"
 #include "util/ffw.h"
+#include "util/win32.h"
 
 using namespace std;
 using namespace pdf2htmlEX;
 
 Param param;
 ArgParser argparser;
-
-#ifdef _WIN32
-#   include <iomanip>
-#   include <libgen.h>
-#   include <direct.h>
-#   include <glib.h>
-#endif
 
 void deprecated_font_suffix(const char * dummy = nullptr)
 {
@@ -116,7 +110,7 @@ void embed_parser (const char * str)
 void prepare_directories()
 {
     std::string tmp_dir = param.tmp_dir + "/pdf2htmlEX-XXXXXX";
-#ifndef _WIN32
+
     errno = 0;
 
     unique_ptr<char> pBuf(new char[tmp_dir.size() + 1]);
@@ -133,19 +127,6 @@ void prepare_directories()
         exit(EXIT_FAILURE);
     }
     param.tmp_dir = pBuf.get();
-#else
-    srand((unsigned)time(0));
-    int rand_value = (int)((rand() / ((double)RAND_MAX+1.0)) * 1e6);
-    stringstream ss;
-    ss << setw(6) << rand_value;
-
-    tmp_dir.erase(tmp_dir.size() - 6);
-    param.tmp_dir = tmp_dir + ss.str();
-    if (mkdir(param.tmp_dir.c_str())) {
-        cerr << "Cannot create temp directory (" << param.tmp_dir << "): " << strerror(errno) << endl;
-        exit(EXIT_FAILURE);
-    }
-#endif
 }
 
 void parse_options (int argc, char **argv)
@@ -366,20 +347,11 @@ int main(int argc, char **argv)
     param.tmp_dir = "/tmp";
     param.data_dir = PDF2HTMLEX_DATA_PATH;
 #else
-    {
-        // Under Windows, the default data_dir is under /data in the pdf2htmlEX directory
-        stringstream ss;
-        ss << dirname(argv[0]) << "/data";
-        param.data_dir = ss.str();
+    param.data_dir = get_data_dir(argv[0]);
+    param.tmp_dir  = get_tmp_dir();
 
-        // Under Windows, the temp path is not under /tmp, find it.
-        char temppath[MAX_PATH];
-        ::GetTempPath(MAX_PATH, temppath);
-        param.tmp_dir = temppath;
-
-        std::string fontConfig = param.data_dir + "/fonts.conf";
-        g_setenv("FONTCONFIG_FILE", fontConfig.c_str(), 1);
-    }
+    std::string fontConfig = param.data_dir + "/fonts.conf";
+    g_setenv("FONTCONFIG_FILE", fontConfig.c_str(), 1);
 #endif
 
     parse_options(argc, argv);
