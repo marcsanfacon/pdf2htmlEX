@@ -35,7 +35,10 @@
 
 #include "util/path.h"
 #include "util/ffw.h"
-#include "util/win32.h"
+
+#ifdef __MINGW32__
+#include "util/mingw.h"
+#endif
 
 using namespace std;
 using namespace pdf2htmlEX;
@@ -343,15 +346,15 @@ void check_param()
 int main(int argc, char **argv)
 {
     // We need to adjust these directories before parsing the options.
-#ifndef __MINGW32__
-    param.tmp_dir = "/tmp";
-    param.data_dir = PDF2HTMLEX_DATA_PATH;
-#else
+#if defined(__MINGW32__)
     param.data_dir = get_exec_dir(argv[0]);
     param.tmp_dir  = get_tmp_dir();
 
     std::string fontConfig = param.data_dir + "/fonts.conf";
     g_setenv("FONTCONFIG_FILE", fontConfig.c_str(), 1);
+#else
+    param.tmp_dir = "/tmp";
+    param.data_dir = PDF2HTMLEX_DATA_PATH;
 #endif
 
     parse_options(argc, argv);
