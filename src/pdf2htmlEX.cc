@@ -1,6 +1,6 @@
 // pdf2htmlEX.cc
 //
-// Copyright (C) 2012,2013 Lu Wang <coolwanglu@gmail.com>
+// Copyright (C) 2012-2014 Lu Wang <coolwanglu@gmail.com>
 
 #include <cstdio>
 #include <cstdlib>
@@ -46,12 +46,6 @@ using namespace pdf2htmlEX;
 Param param;
 ArgParser argparser;
 
-void deprecated_font_suffix(const char * dummy = nullptr)
-{
-    cerr << "--font-suffix is deprecated. Use `--font-format` instead." << endl;
-    exit(EXIT_FAILURE);
-}
-
 void show_usage_and_exit(const char * dummy = nullptr)
 {
     cerr << "Usage: pdf2htmlEX [options] <input.pdf> [<output.html>]" << endl;
@@ -62,7 +56,7 @@ void show_usage_and_exit(const char * dummy = nullptr)
 void show_version_and_exit(const char * dummy = nullptr)
 {
     cerr << "pdf2htmlEX version " << PDF2HTMLEX_VERSION << endl;
-    cerr << "Copyright 2012,2013 Lu Wang <coolwanglu@gmail.com> and other contributers" << endl;
+    cerr << "Copyright 2012-2014 Lu Wang <coolwanglu@gmail.com> and other contributers" << endl;
     cerr << "Libraries: " << endl;
     cerr << "  poppler " << POPPLER_VERSION << endl;
     cerr << "  libfontforge " << ffw_get_version() << endl;
@@ -81,6 +75,14 @@ void show_version_and_exit(const char * dummy = nullptr)
     cerr << " svg";
 #endif
     cerr << endl;
+
+    // TODO: define constants
+    if(ffw_get_version() < 20130101LL) 
+    {
+        cerr << endl 
+             << "Warning: pdf2htmlEX has been built with a too old version of Fontforge, which is not supported." << endl;
+    }
+    
     cerr << endl;
     exit(EXIT_SUCCESS);
 }
@@ -206,7 +208,6 @@ void parse_options (int argc, char **argv)
         .add("help,h", "print usage information", &show_usage_and_exit)
 
         // deprecated
-        .add("font-suffix", "", &deprecated_font_suffix)
 
         .add("", &param.input_filename, "", "")
         .add("", &param.output_filename, "", "")
