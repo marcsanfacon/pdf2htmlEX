@@ -24,7 +24,7 @@ char* mkdtemp(char* temp)
     if (temp != nullptr) {
         filename = mktemp(temp);
         if (filename != nullptr) {
-            if (_mkdir(temp) != 0) {
+            if (mkdir(temp, S_IRWXU) != 0) {
                 filename = nullptr;
             }
         }
@@ -43,7 +43,6 @@ string get_exec_dir(char *dir)
         s = wd;
         free(wd);
     }
-    s += "/data";
     return s;
 }
 
